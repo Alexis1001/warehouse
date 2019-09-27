@@ -4,90 +4,66 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
-/**
- * Resourceful controller for interacting with inventories
- */
-class InventoryController {
-  /**
-   * Show a list of all inventories.
-   * GET inventories
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async index ({ request, response, view }) {
-  }
+const Inventory=use('App/Models/Inventory')
+const Product=use('App/Models/Product')
+const AuthorizationService = use('App/Services/AuthorizationService')
 
-  /**
-   * Render a form to be used for creating a new inventory.
-   * GET inventories/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
+class InventoryController {
+
+  async index ({response}) {
+    const inventory= await Inventory.all();
+    return response.json({inventory});
+  }
   async create ({ request, response, view }) {
   }
 
-  /**
-   * Create/save a new inventory.
-   * POST inventories
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async store ({ request, response }) {
+  async store ({ request, response,auth}) {
+    const user= await auth.getUser();
+    const {quantity,price,tax,user_id,product_id}=request.all();
+    
+    const inventory=new Inventory();
+    inventory.fill({
+      quantity,
+      price,
+      tax,
+      user_id,
+      product_id
+    });
+  
+    AuthorizationService.AdminPrivileges(user.rol);
+    await inventory.save();
+    return response.json({inventory}); 
   }
 
-  /**
-   * Display a single inventory.
-   * GET inventories/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async show ({ params, request, response, view }) {
+
+  async show ({ params, response}) {
+    const {id}=params;
+    const inventory= await Inventory.find(id);
+    return response.json({inventory});
+
   }
 
-  /**
-   * Render a form to update an existing inventory.
-   * GET inventories/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
   async edit ({ params, request, response, view }) {
   }
 
-  /**
-   * Update inventory details.
-   * PUT or PATCH inventories/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
   async update ({ params, request, response }) {
   }
 
-  /**
-   * Delete a inventory with id.
-   * DELETE inventories/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async destroy ({ params, request, response }) {
+  async destroy ({ params,response,auth }) {
+    const user= await auth.getUser();
+    const {id}=params;
+    const inventory= await Inventory.find(id);
+    AuthorizationService.AdminPrivileges(user.rol);
+   if(inventory==null){
+      return response.json({error:'not exist product'})
+    }
+    else{
+      await inventory.delete();
+      return response.json({inventory});
+    }
+
   }
 }
 
 module.exports = InventoryController
+module.exports = new InventoryController();
