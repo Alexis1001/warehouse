@@ -31,6 +31,8 @@ class UserController {
   }
   
   async index ({ request, response, view }) {
+    const user= User.all();
+    return response.json({user});
   }
   async create ({ request, response, view }) {
   }
