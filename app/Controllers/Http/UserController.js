@@ -6,6 +6,7 @@
 
 const User=use('App/Models/User');
 const AuthorizationService = use('App/Services/AuthorizationService')
+const Hash = use('Hash')
 
 class UserController {
   
@@ -27,15 +28,36 @@ class UserController {
     });
     AuthorizationService.verifyRegistration(user)
     await user.save()
-    return response.json({user});
+    return this.login(...arguments);
   }
   
   async index ({ request, response, view }) {
     const user= await User.all();
     return response.json({user});
 
-   
   }
+
+  async resetpass ({ request, response, auth }) {
+    const users = await auth.getUser();
+    const id = users.id
+    const { password, newPassword } = request.only(['username', 'password', 'newPassword']);
+    
+    const user = await User.findByOrFail('id', id)
+   
+    const passwordCheck = await Hash.verify(password, user.password)
+
+    if (!passwordCheck) {
+      return response
+        .status(400)
+        .send({ message: { error: 'Incorrect password provided' } })
+    }
+
+    user.password = newPassword
+  
+    await user.save()
+    return response.json({ message: 'Password Success!'})
+  }
+
   async create ({ request, response, view }) {
   }
   async store ({ request, response }) {

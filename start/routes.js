@@ -24,7 +24,9 @@ Route.group(() => {
   //routes users
   Route.post('user/login','UserController.login');
   Route.post('user/register','UserController.register');
+  Route.post('user/ResetPassword','UserController.resetpass');
   Route.get('user','UserController.index');
+  
 
   //routes products 
   Route.get('product','ProductController.index');//(cashier and admin )  list all product
