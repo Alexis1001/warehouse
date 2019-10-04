@@ -46,9 +46,10 @@ Route.group(() => {
   Route.get('transaction/:id','TransactionController.show');//(cashier and admin) all transaction 
 
   // routes sales 
-  Route.post('sales/:ProductId','SaleController.store');//(cashier and admin) 
-  Route.get('sales','SaleController.index');//(cashier and admin) permissions creted
+  Route.post('sales/:ProductId','SaleController.store');//(cashier and admin) admin only delete
+  Route.get('sales','SaleController.index');//(cashier and admin) 
   Route.get('sales/:id','SaleController.show');//(cashier and admin) 
 
+  
   
 }).prefix('api/v1/');

@@ -67,7 +67,7 @@ class ProductController {
        user_id: auth.user.id,
       }
     };
-    var describe=" add product "+inventory.quantity+" "+product.name;
+    var describe=" product  added "+inventory.quantity+" "+product.name;
     TransactionController.addTransaction(inventory.id,1,describe);
 
     return response.json({PRODUCT});
@@ -81,7 +81,7 @@ class ProductController {
     const {id}=params;
     const product=await Product.find(id);
     const inventory=await Inventory.find(id);
-   
+    
     AuthorizationService.AdminPrivileges(user.rol);
 
     try{
@@ -91,10 +91,10 @@ class ProductController {
        console.log("product name "+product.name+" quantity total "+inventory.quantity+" quantity resulting "+deleted)
        inventory.merge({ quantity: deleted });
        await inventory.save();
-       var describe="delete by expired "+quantity_remove+" product name "+product.name;
+       var describe="piece deleted by expired "+quantity_remove+" "+product.name;
        TransactionController.addTransaction(inventory.id,3,describe);
 
-       return response.json(inventory);
+       return response.json({inventory});
       }
 
       else{
@@ -124,7 +124,7 @@ class ProductController {
       console.log("product name "+product.name+" quantity total "+inventory.quantity+" quantity resulting "+add_pieces);
       inventory.merge({ quantity: add_pieces });
       await inventory.save();
-      var describe="add new products "+quantity_add+" "+product.name;
+      var describe="new piece added "+quantity_add+" "+product.name;
       TransactionController.addTransaction(inventory.id,1,describe);
 
     }catch(err){
