@@ -5,14 +5,24 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const Inventory=use('App/Models/Inventory')
+const User=use('App/Models/User')
 const Product=use('App/Models/Product')
 const AuthorizationService = use('App/Services/AuthorizationService')
 
 class InventoryController {
 
-  async index ({response}) {
-    const inventory= await Inventory.all();
-    return response.json({inventory});
+  async index ({response,auth}){
+
+    const inventories=await Inventory.query()
+    .with('product')
+    .fetch()
+
+    /* const inventories=await Inventory.query()
+    .with('product')
+    .with('user')
+    .fetch()*/
+    
+    return response.json({inventories});
   }
   async create ({ request, response, view }) {
   }

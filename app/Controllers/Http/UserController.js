@@ -7,15 +7,25 @@
 const User=use('App/Models/User');
 const AuthorizationService = use('App/Services/AuthorizationService')
 const Hash = use('Hash')
-
+const Tokens=use('App/Models/Token');
 class UserController {
   
   async login({ request, response,auth}) {
     const {email,password}=request.all();
     const token = await auth.attempt(email,password);
-    return response.json(token);
-  
+
+    const user =await User.findByOrFail('email',email);
+    if(user){
+      //var user_rol=user.rol;
+      //console.log("entron en user "+user.id);
+      return response.json({
+        token,user}
+      );
+    }
+      return response.json({message:'not found'})   
   }
+
+  
 
   async register({request,response}) {
     const {username,email,password,rol}=request.all();
@@ -26,6 +36,7 @@ class UserController {
       password,
       rol
     });
+
     AuthorizationService.verifyRegistration(user)
     await user.save()
     return this.login(...arguments);

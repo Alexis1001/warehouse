@@ -26,8 +26,7 @@ Route.group(() => {
   Route.post('user/register','UserController.register');
   Route.post('user/ResetPassword','UserController.resetpass');
   Route.get('user','UserController.index');
-  
-
+ 
   //routes products 
   Route.get('product','ProductController.index');//(cashier and admin )  list all product
   Route.get('product/:id','ProductController.show'); //(cashier and admin ) show a product
@@ -50,6 +49,6 @@ Route.group(() => {
   Route.get('sales','SaleController.index');//(cashier and admin) 
   Route.get('sales/:id','SaleController.show');//(cashier and admin) 
 
-  
-  
+
+
 }).prefix('api/v1/');
