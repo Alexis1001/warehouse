@@ -14,8 +14,12 @@ const TransactionController=use("App/Controllers/Http/TransactionController");
 class SaleController {
  
   async index ({ request, response, view }) {
-    const sale= await Sale.all();
+    //const sale= await Sale.all();
+    const sales=await Sale.query()
+    .with('product')
+    .fetch()
     response.json({sale});  
+    
   }
 
   async create ({ request, response, view }) {
