@@ -18,8 +18,8 @@ class SaleController {
     const sales=await Sale.query()
     .with('product')
     .fetch()
-    response.json({sale});  
-    
+    response.json({sales});  
+
   }
 
   async create ({ request, response, view }) {

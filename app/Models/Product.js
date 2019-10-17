@@ -7,7 +7,11 @@ class Product extends Model {
     
     inventory(){
         return this.hasOne('App/Models/Inventory')
-      }
+    }
+    sales(){
+      return this.hasOne('App/Models/Sales')
+    }
+
 }
 
 module.exports = Product
