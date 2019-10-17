@@ -135,10 +135,14 @@ class ProductController {
     
   }
   
-  async AddPieces({response,params,auth}){
+  async AddPieces({response,params,auth,request}){
     const user= await auth.getUser();
-    const product_id=params.id;
-    const quantity_add=params.pieces;
+    const product_id=params.id; //old
+    //const quantity_add=params.pieces; old
+    const data=request.all(); //new
+    const quantity_add=data.quantity_add;//new
+
+    
     console.log("product id "+product_id+" quantity to add  "+quantity_add);
     const {id}=params;
     const product=await Product.find(id);
