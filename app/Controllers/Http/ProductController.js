@@ -56,7 +56,7 @@ class ProductController {
     })
 
     //product.image ='/uploads/'+'imagen'+'/'+product.image;
-
+    //comentando perro; 
     product.image ='/uploads/'+product.name+'/'+product.image;
 
     await product.save(); 
