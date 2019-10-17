@@ -30,8 +30,8 @@ Route.group(() => {
   //routes products 
   Route.get('product','ProductController.index');//(cashier and admin )  list all product
   Route.get('product/:id','ProductController.show'); //(cashier and admin ) show a product
-  Route.post('product','ProductController.store');// (admin) create product insert in tree  tables in products,inventories and transactions
-  Route.put('product/remove/:id/:cantidad','ProductController.DeletePieces');//(admin) update  delete by expired pieces
+  Route.post('product','ProductController.store')// (admin) create product insert in tree  tables in products,inventories and transactions
+  Route.put('product/remove/:id','ProductController.DeletePieces');//(admin) update  delete by expired pieces
   Route.put('product/add/:id/:pieces','ProductController.AddPieces');//(admin ) update  add new pieces  
   //Route.delete('product/:id','ProductController.destroy');//(admin) destroy a product when have cero piece
   //Route.put('product/:id','ProductController.update')//(admin) update  a product change price and iva

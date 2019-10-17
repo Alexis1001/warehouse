@@ -13,7 +13,7 @@ class UserController {
   async login({ request, response,auth}) {
     const {email,password}=request.all();
     const token = await auth.attempt(email,password);
-
+    console.log("email "+email+" password  "+password);
     const user =await User.findByOrFail('email',email);
     if(user){
       //var user_rol=user.rol;

@@ -8,7 +8,7 @@ const AuthorizationService=use('App/Services/AuthorizationService')
 const Product=use('App/Models/Product');
 const  Inventory=use('App/Models/Inventory');
 const  TransactionController=use("App/Controllers/Http/TransactionController");
-
+const Helpers = use('Helpers')
 class ProductController {
 
   async index ({response}) {
@@ -21,30 +21,54 @@ class ProductController {
   
   async store ({ request, response,auth}) {
     const user= await auth.getUser();
-    const {name,description,image,quantity,price,tax}=request.all();
+   // const {name,description,image,quantity,price,tax}=request.all();
+    const data = request.all();
+    
+    console.log("1 data name "+data.name);
+    console.log("2 data description "+data.description);
+    console.log("3 data image "+data.image);
+    console.log("4 data qunatoty "+data.quantity);
+    console.log("5 data price "+data.price);
+    console.log("6 data tax "+data.tax);
+  
     const product=new Product();
     const inventory=new Inventory();
-
     AuthorizationService.AdminPrivileges(user.rol);
-
     var code=Math.random() * (1000000-1000)+10000;
-    console.log("id del usuario logeado "+auth.user.id);
-    console.log("rol del usuario logeado "+auth.user.rol);
-    console.log("code generado aleatorio "+code);
-    console.log("nombre "+name);
-    product.fill({
-      name,
-      description,
-      image,
-      code
-    });
+    console.log("code  "+code);
+
+    product.code=code;
+    product.name=data.name;
+    product.description=data.description;
+    product.image=data.image;
+   
+
+    console.log("1 product code "+product.code);
+    console.log("2 product name "+product.name);
+    console.log("3 product description "+product.description);
+    console.log("4 product imagen "+product.image);
+
+    const IMG = request.file('image')
+    product.image=product.name+'.'+IMG.subtype
+
+    await IMG.move(Helpers.publicPath('uploads/'+product.name),{
+      name:product.image
+    })
+
+    //product.image ='/uploads/'+'imagen'+'/'+product.image;
+
+    product.image ='/uploads/'+product.name+'/'+product.image;
 
     await product.save(); 
   
+
+    console.log("id del producto "+product.id);
+    console.log("id del usuario "+auth.user.id);
+
     inventory.fill({
-      quantity,
-      price,
-      tax,
+      quantity:data.quantity,
+      price:data.price,
+      tax:data.tax,
       product_id:product.id,
       user_id: auth.user.id
     });  
@@ -55,14 +79,14 @@ class ProductController {
       Product:{
         id:product.id,
         code:code,
-        name:name,
-        description:description,
-        image:image,
+        name:data.name,
+        description:data.description,
+        image:data.image,
       },
       Inventory:{
-       quantity:quantity,
-       price:price,
-       tax:tax,
+       quantity:data.quantity,
+       price:data.price,
+       tax:data.tax,
        product_id: product.id,
        user_id: auth.user.id,
       }
@@ -73,10 +97,13 @@ class ProductController {
     return response.json({PRODUCT});
   }
 
-  async DeletePieces({response,params,auth}){
+  async DeletePieces({response,params,auth,request}){
     const user= await auth.getUser();
     const product_id=params.id;
-    const quantity_remove=params.cantidad;
+    //const quantity_remove=params.cantidad;//primero
+    //const {quantity_remove}=request.all();//segundo
+    const data=request.all();
+    var quantity_remove=data.quantity_remove;
     console.log("product_id "+product_id+" quantity to remove  "+quantity_remove);
     const {id}=params;
     const product=await Product.find(id);
