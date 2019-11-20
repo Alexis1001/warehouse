@@ -49,6 +49,10 @@ Route.group(() => {
   Route.get('sales','SaleController.index');//(cashier and admin) 
   Route.get('sales/:id','SaleController.show');//(cashier and admin) 
 
-
+  // token de los admins
+  //insert
+  Route.post('user/admin','AdminTokenController.store');
+  // index by id
+  Route.get('user/admin/:id','AdminTokenController.show');
 
 }).prefix('api/v1/');

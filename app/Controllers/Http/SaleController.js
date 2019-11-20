@@ -15,6 +15,11 @@ class SaleController {
  
   async index ({ request, response, view }) {
     //const sale= await Sale.all();
+
+    //const inventories=await Inventory.query()
+    //.with('product')
+    //.fetch()
+    
     const sales=await Sale.query()
     .with('product')
     .fetch()
